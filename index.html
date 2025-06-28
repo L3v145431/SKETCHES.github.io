@@ -10,11 +10,18 @@
       font-family: Arial, sans-serif;
       display: flex;
       justify-content: center;
-      padding-top: 60px;
-      align-items: flex-start;
+      align-items: center;
       height: 100vh;
       margin: 0;
       background-color: #f0f0f0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .outer-container {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: center;
     }
     .game-container {
       background-color: white;
@@ -23,7 +30,7 @@
       padding: 20px;
       text-align: center;
       max-width: 1000px;
-      width: 90%;
+      width: 100%;
     }
     .image-container {
       width: 60px;
@@ -203,23 +210,38 @@
       20%, 60% { transform: translateX(-5px); }
       40%, 80% { transform: translateX(5px); }
     }
+    @media (max-width: 768px) {
+      .game-container {
+        width: 100%;
+        padding: 10px;
+      }
+      .images {
+        width: 100%;
+      }
+    }
+    p{
+        font-size: 25px;
+        color: rgb(80, 77, 77);
+    }
   </style>
 </head>
 <body>
-  <div class="game-container">
-    <h2>An easy way to create new ideas is to combine known things.</h2>
-    <h3>This is called "Innovation by synthesis".</h3>
-    <h4 id="instruction">Exercise: Combine images to get a new image!</h4>
-    <div class="drop-zone" id="drop-zone"></div>
-    <div class="images" id="images"></div>
-    <button class="hint-button" onclick="showHint()">Hint</button>
-    <div class="hint-text" id="hint-text"></div>
-    <div id="hint-image-container" class="hint-image-container">
-      <p>Try using this image:</p>
-      <div class="hint-image"></div>
+  <div class="outer-container">
+    <div class="game-container">
+      <h2>What you can expect from our Spark Team.</h2>
+      <p>Click and drag the right traits of out innovators:</p>
+  
+      <div class="drop-zone" id="drop-zone"></div>
+      <div class="images" id="images"></div>
+      <button class="hint-button" onclick="showHint()">Hint</button>
+      <div class="hint-text" id="hint-text"></div>
+      <div id="hint-image-container" class="hint-image-container">
+        <p>Try using this image:</p>
+        <div class="hint-image"></div>
+      </div>
+      <button class="continue-button" id="continue-button" onclick="redirect()">Continue</button>
+      <div class="countdown" id="countdown"></div>
     </div>
-    <button class="continue-button" id="continue-button" onclick="redirect()">Continue</button>
-    <div class="countdown" id="countdown"></div>
   </div>
   <script>
     const imageData = [
@@ -336,7 +358,7 @@
     }
 
     function redirect() {
-      window.location.href = 'https://www.example.com'; // Replace with your desired URL
+      window.location.href = 'https://levi5171.wixstudio.com/my-site-1/blank-4'; // Replace with your desired URL
     }
 
     function renderDropZone() {
