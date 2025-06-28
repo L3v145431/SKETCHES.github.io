@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Innovation by Synthesis with Images</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      padding-top: 60px;
+      align-items: flex-start;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+    .game-container {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: center;
+      max-width: 1000px;
+      width: 90%;
+    }
+    .image-container {
+      width: 60px;
+      margin: 10px;
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: grab;
+      user-select: none;
+      transition: transform 0.3s ease;
+    }
+    .image {
+      width: 60px;
+      height: 60px;
+      border: 3px solid #000000;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+    .image.valid {
+      border-color: green;
+    }
+    .image.invalid {
+      border-color: red;
+    }
+    .image img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+    }
+    .image-text {
+      text-align: center;
+      margin-top: 5px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .images {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 20px auto;
+      height: 250px;
+      overflow-y: auto;
+      width: 46%;
+      gap: 2%;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 4.6%;
+      position: relative;
+      box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+    }
+    .drop-zone {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      flex-wrap: nowrap;
+      margin: 20px 0px;
+      overflow-x: auto;
+      padding-bottom: 50px;
+    }
+    .drop-box-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0 5px;
+    }
+    .drop-box {
+      width: 70px;
+      height: 70px;
+      border: 4px dashed #aaa3a3;
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 36px;
+      position: relative;
+      flex-shrink: 0;
+      user-select: none;
+      cursor: pointer;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .drop-box.empty {
+      border-color: #aaa3a3;
+    }
+    .drop-box.filled {
+      border-color: white;
+    }
+    .drop-box.shake {
+      animation: shake 0.5s;
+    }
+    .drop-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    .drop-box-text {
+      text-align: center;
+      margin-top: 5px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .sign {
+      font-size: 76px;
+      margin: 0 5px;
+      color: #FCD307;
+      user-select: none;
+      flex-shrink: 0;
+    }
+    .result-box {
+      border: 2px solid #FCD307;
+      background-color: #FFF8DC;
+      border-radius: 5px;
+      margin-left: 15px;
+      flex-shrink: 0;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .result-box img {
+      max-width: 60px;
+      max-height: 60px;
+      object-fit: contain;
+    }
+    .hint-button {
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: #FCD307;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .hint-text {
+      margin: 20px auto;
+      font-size: 18px;
+      color: #333;
+      min-height: 24px;
+    }
+    .hint-image-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 20px auto;
+      padding: 10px;
+    }
+    .hint-image img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .continue-button {
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: #FCD307;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      display: none;
+    }
+    .countdown {
+      margin: 10px auto;
+      font-size: 18px;
+      color: #333;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h2>An easy way to create new ideas is to combine known things.</h2>
+    <h3>This is called "Innovation by synthesis".</h3>
+    <h4 id="instruction">Exercise: Combine images to get a new image!</h4>
+    <div class="drop-zone" id="drop-zone"></div>
+    <div class="images" id="images"></div>
+    <button class="hint-button" onclick="showHint()">Hint</button>
+    <div class="hint-text" id="hint-text"></div>
+    <div id="hint-image-container" class="hint-image-container">
+      <p>Try using this image:</p>
+      <div class="hint-image"></div>
+    </div>
+    <button class="continue-button" id="continue-button" onclick="redirect()">Continue</button>
+    <div class="countdown" id="countdown"></div>
+  </div>
+  <script>
+    const imageData = [
+      { src: 'https://static.wixstatic.com/media/9c422e_4027fde4403c4df89509abf2263b6466~mv2.png', name: 'Talk & Do Nothing' },
+      { src: 'https://static.wixstatic.com/media/9c422e_188264a058dc481d8ad0f8c23d1695e5~mv2.png', name: 'Extraordinary Presence' },
+      { src: 'https://static.wixstatic.com/media/9c422e_fd16e57d914c4b7597b283fea2fc3504~mv2.png', name: 'Positive Mindset' },
+      { src: 'https://static.wixstatic.com/media/5d9fdb_33e8815debe4482b8e19917f76274b6d~mv2.png', name: 'Confused & lost' },
+      { src: 'https://static.wixstatic.com/media/9c422e_56a882fa6b884fdaa8abbbe260341518~mv2.png', name: 'Super Skilled' },
+      { src: 'https://static.wixstatic.com/media/9c422e_9dc5110bcb5c451b99c8bca11812f42b~mv2.png', name: 'Super Muscles' },
+      { src: 'https://static.wixstatic.com/media/9c422e_6a93b37adb9b48759b5ed4c701fd7ed6~mv2.png', name: 'Scared of Everything' },
+      { src: 'https://static.wixstatic.com/media/9c422e_177c15101cc74545b0fe14af049c8e5f~mv2.png', name: 'Pure theorist' },
+      { src: 'https://static.wixstatic.com/media/9c422e_5febf08c276f46b593d337d9a5cd46be~mv2.png', name: 'Holistic Vision' },
+      { src: 'https://static.wixstatic.com/media/9c422e_1803a5ed092843209a4262f95b060ba9~mv2.png', name: 'Good at Videogames' }
+    ];
+
+    let draggedImage = null;
+
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
+
+    function drag(ev) {
+      draggedImage = ev.target;
+      ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function endDrag(ev) {
+      if (draggedImage) {
+        draggedImage = null;
+      }
+    }
+
+    function drop(ev) {
+      ev.preventDefault();
+      const data = ev.dataTransfer.getData("text");
+      let dropBoxContainer = ev.target;
+      while (!dropBoxContainer.classList.contains('drop-box-container')) {
+        dropBoxContainer = dropBoxContainer.parentNode;
+      }
+      const dropBox = dropBoxContainer.querySelector('.drop-box');
+      if (dropBox.children.length === 0) {
+        const imageContainer = document.getElementById(data);
+        const imageText = imageContainer.querySelector('.image-text').textContent;
+        const imageElement = imageContainer.querySelector('.image');
+
+        if (['Extraordinary Presence', 'Positive Mindset', 'Super Skilled', 'Holistic Vision'].includes(imageText)) {
+          imageElement.classList.add('valid');
+          dropBox.appendChild(imageContainer);
+          setTimeout(() => {
+            imageElement.classList.remove('valid');
+          }, 1000);
+        } else {
+          imageElement.classList.add('invalid');
+          dropBox.appendChild(imageContainer);
+          dropBox.classList.add('shake');
+          setTimeout(() => {
+            dropBox.classList.remove('shake');
+            imageElement.classList.remove('invalid');
+            const imagesContainer = document.getElementById('images');
+            imagesContainer.appendChild(imageContainer);
+            resetDropBox(dropBoxContainer);
+          }, 1000);
+        }
+        dropBox.classList.remove('empty');
+        dropBox.classList.add('filled');
+        checkAllCorrect();
+      }
+    }
+
+    function resetDropBox(dropBoxContainer) {
+      const dropBox = dropBoxContainer.querySelector('.drop-box');
+      dropBox.innerHTML = '';
+      dropBox.classList.remove('filled');
+      dropBox.classList.add('empty');
+    }
+
+    function checkAllCorrect() {
+      const dropBoxes = Array.from({ length: 4 }, (_, i) => document.getElementById(`drop-box-${i + 1}`));
+      const validImages = ['Extraordinary Presence', 'Positive Mindset', 'Super Skilled', 'Holistic Vision'];
+
+      const allCorrect = dropBoxes.every(dropBox => {
+        const imageTextElement = dropBox.querySelector('.image-text');
+        return imageTextElement && validImages.includes(imageTextElement.textContent);
+      });
+
+      if (allCorrect) {
+        launchConfetti();
+        setTimeout(showContinueButton, 1500);
+      }
+    }
+
+    function launchConfetti() {
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    }
+
+    function showContinueButton() {
+      const continueButton = document.getElementById('continue-button');
+      const countdownElement = document.getElementById('countdown');
+      continueButton.style.display = 'block';
+      let countdown = 10;
+      countdownElement.textContent = `Redirecting in ${countdown} seconds...`;
+      const countdownInterval = setInterval(() => {
+        countdown--;
+        countdownElement.textContent = `Redirecting in ${countdown} seconds...`;
+        if (countdown <= 0) {
+          clearInterval(countdownInterval);
+          redirect();
+        }
+      }, 1000);
+    }
+
+    function redirect() {
+      window.location.href = 'https://www.example.com'; // Replace with your desired URL
+    }
+
+    function renderDropZone() {
+      const dropZone = document.getElementById('drop-zone');
+      dropZone.innerHTML = '';
+      for (let i = 0; i < 4; i++) {
+        const dropBoxContainer = document.createElement('div');
+        dropBoxContainer.className = 'drop-box-container';
+        const dropBox = document.createElement('div');
+        dropBox.className = 'drop-box empty';
+        dropBox.id = `drop-box-${i + 1}`;
+        dropBox.ondragover = allowDrop;
+        dropBox.ondrop = drop;
+        dropBoxContainer.appendChild(dropBox);
+        dropZone.appendChild(dropBoxContainer);
+        if (i < 3) {
+          const plusSign = document.createElement('span');
+          plusSign.className = 'sign';
+          plusSign.textContent = '+';
+          dropZone.appendChild(plusSign);
+        }
+      }
+      const equalSign = document.createElement('span');
+      equalSign.className = 'sign';
+      equalSign.textContent = '=';
+      dropZone.appendChild(equalSign);
+      const resultBox = document.createElement('div');
+      resultBox.className = 'drop-box result-box';
+      resultBox.id = 'result-box';
+      resultBox.innerHTML = `<img src="https://static.wixstatic.com/media/9c422e_1738f6701c4c414dbddba37729e29e07~mv2.png" alt="Result Image">`;
+      dropZone.appendChild(resultBox);
+    }
+
+    function renderImages() {
+      const imagesContainer = document.getElementById('images');
+      imagesContainer.innerHTML = '';
+      imageData.forEach((data, index) => {
+        const img = document.createElement('img');
+        img.src = data.src;
+        const imageContainer = document.createElement('div');
+        imageContainer.className = 'image-container';
+        imageContainer.id = `image-container-${index}`;
+        imageContainer.draggable = true;
+        imageContainer.addEventListener('dragstart', drag);
+        imageContainer.ondragend = endDrag;
+        const imageDiv = document.createElement('div');
+        imageDiv.className = 'image';
+        imageDiv.appendChild(img);
+        const textDiv = document.createElement('div');
+        textDiv.className = 'image-text';
+        textDiv.textContent = data.name;
+        imageContainer.appendChild(imageDiv);
+        imageContainer.appendChild(textDiv);
+        imageContainer.onclick = () => handleImageClickWithAnimation(imageContainer);
+        imagesContainer.appendChild(imageContainer);
+      });
+    }
+
+    function handleImageClickWithAnimation(imageContainer) {
+      const dropBoxes = Array.from({ length: 4 }, (_, i) => document.getElementById(`drop-box-${i + 1}`));
+      const emptyDropBox = dropBoxes.find(box => box.children.length === 0);
+      if (!emptyDropBox) return;
+
+      const imageRect = imageContainer.getBoundingClientRect();
+      const dropRect = emptyDropBox.getBoundingClientRect();
+      const imageText = imageContainer.querySelector('.image-text').textContent;
+      const imageElement = imageContainer.querySelector('.image');
+
+      const clone = imageContainer.cloneNode(true);
+      clone.style.position = 'fixed';
+      clone.style.left = `${imageRect.left}px`;
+      clone.style.top = `${imageRect.top}px`;
+      clone.style.margin = '0';
+      clone.style.zIndex = 1000;
+      clone.style.transition = 'all 0.5s ease';
+      document.body.appendChild(clone);
+
+      setTimeout(() => {
+        clone.style.left = `${dropRect.left + (dropRect.width - imageRect.width) / 2}px`;
+        clone.style.top = `${dropRect.top + (dropRect.height - imageRect.height) / 2}px`;
+        clone.style.transform = 'scale(1.1)';
+      }, 0);
+
+      clone.addEventListener('transitionend', () => {
+        clone.remove();
+        if (['Extraordinary Presence', 'Positive Mindset', 'Super Skilled', 'Holistic Vision'].includes(imageText)) {
+          imageElement.classList.add('valid');
+          emptyDropBox.appendChild(imageContainer);
+          setTimeout(() => {
+            imageElement.classList.remove('valid');
+          }, 1000);
+        } else {
+          imageElement.classList.add('invalid');
+          emptyDropBox.appendChild(imageContainer);
+          emptyDropBox.classList.add('shake');
+          setTimeout(() => {
+            emptyDropBox.classList.remove('shake');
+            imageElement.classList.remove('invalid');
+            const imagesContainer = document.getElementById('images');
+            imagesContainer.appendChild(imageContainer);
+            resetDropBox(emptyDropBox.parentNode);
+          }, 1000);
+        }
+        emptyDropBox.classList.remove('empty');
+        emptyDropBox.classList.add('filled');
+        imageContainer.style.position = 'relative';
+        imageContainer.style.top = '7px';
+        checkAllCorrect();
+      }, { once: true });
+    }
+
+    function handleDropBoxImageClick(imageContainer) {
+      const imagesContainer = document.getElementById('images');
+      const imageRect = imageContainer.getBoundingClientRect();
+      const containerRect = imagesContainer.getBoundingClientRect();
+
+      const clone = imageContainer.cloneNode(true);
+      clone.style.position = 'fixed';
+      clone.style.left = `${imageRect.left}px`;
+      clone.style.top = `${imageRect.top}px`;
+      clone.style.margin = '0';
+      clone.style.zIndex = 1000;
+      clone.style.transition = 'all 0.5s ease';
+      document.body.appendChild(clone);
+
+      setTimeout(() => {
+        clone.style.left = `${containerRect.left + (containerRect.width - imageRect.width) / 2}px`;
+        clone.style.top = `${containerRect.top + (containerRect.height - imageRect.height) / 2}px`;
+      }, 0);
+
+      clone.addEventListener('transitionend', () => {
+        clone.remove();
+        imagesContainer.appendChild(imageContainer);
+      }, { once: true });
+    }
+
+    function showHint() {
+      const hintText = document.getElementById('hint-text');
+      const hintImageContainer = document.getElementById('hint-image-container');
+      hintText.textContent = '';
+      hintImageContainer.style.display = 'flex';
+      const hintImage = document.querySelector('.hint-image');
+      hintImage.innerHTML = '<img src="https://static.wixstatic.com/media/a687f1_af173dee2aa9497caa5d7623e469b329~mv2.png" alt="Hint Image">';
+    }
+
+    renderDropZone();
+    renderImages();
+  </script>
+</body>
+</html>
