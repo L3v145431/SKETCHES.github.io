@@ -195,9 +195,10 @@
       padding: 10px 20px;
       background-color: #FCD307;
       border: none;
-      border-radius: 5px;
+      border-radius: 50px;
       cursor: pointer;
       font-size: 16px;
+      font-weight: bold;
       display: none;
     }
     .countdown {
@@ -219,23 +220,22 @@
         width: 100%;
       }
     }
-    p{
-        font-size: 25px;
-        color: rgb(80, 77, 77);
+    p {
+      font-size: 25px;
+      color: rgb(80, 77, 77);
     }
   </style>
 </head>
 <body>
-   
   <div class="outer-container">
     <div class="game-container">
-         <br>
-    <br>
-     <br>
-    <br>
+      <br>
+      <br>
+      <br>
+      <br>
       <h2>What you can expect from our Spark Team.</h2>
       <p>Click and drag the right traits of out innovators:</p>
-  
+
       <div class="drop-zone" id="drop-zone"></div>
       <div class="images" id="images"></div>
       <button class="hint-button" onclick="showHint()">Hint</button>
@@ -245,7 +245,6 @@
         <div class="hint-image"></div>
       </div>
       <button class="continue-button" id="continue-button" onclick="redirect()">Continue</button>
-      <div class="countdown" id="countdown"></div>
     </div>
   </div>
   <script>
@@ -348,13 +347,12 @@
 
     function showContinueButton() {
       const continueButton = document.getElementById('continue-button');
-      const countdownElement = document.getElementById('countdown');
       continueButton.style.display = 'block';
       let countdown = 10;
-      countdownElement.textContent = `Redirecting in ${countdown} seconds...`;
+      continueButton.textContent = `Continue [${countdown}]`;
       const countdownInterval = setInterval(() => {
         countdown--;
-        countdownElement.textContent = `Redirecting in ${countdown} seconds...`;
+        continueButton.textContent = `Continue [${countdown}]`;
         if (countdown <= 0) {
           clearInterval(countdownInterval);
           redirect();
@@ -363,7 +361,7 @@
     }
 
     function redirect() {
-      window.location.href = 'https://levi5171.wixstudio.com/my-site-1/blank-3'; // Replace with your desired URL
+      window.location.href = 'https://levi5171.wixstudio.com/my-site-1/blank-3'; // Reemplaza con tu URL deseada
     }
 
     function renderDropZone() {
