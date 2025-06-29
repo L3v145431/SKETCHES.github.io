@@ -1,514 +1,441 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Innovation by Synthesis with Images</title>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f0f0f0;
-      padding: 20px;
-      box-sizing: border-box;
-    }
-    .outer-container {
-      width: 100%;
-      max-width: 1200px;
-      display: flex;
-      justify-content: center;
-    }
-    .game-container {
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      text-align: center;
-      max-width: 1000px;
-      width: 100%;
-    }
-    .image-container {
-      width: 60px;
-      margin: 10px;
-      display: inline-flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      cursor: grab;
-      user-select: none;
-      transition: transform 0.3s ease;
-    }
-    .image {
-      width: 60px;
-      height: 60px;
-      border: 3px solid #000000;
-      border-radius: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      transition: border-color 0.3s;
-    }
-    .image.valid {
-      border-color: green;
-    }
-    .image.invalid {
-      border-color: red;
-    }
-    .image img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      pointer-events: none;
-    }
-    .image-text {
-      text-align: center;
-      margin-top: 5px;
-      font-size: 12px;
-      font-weight: bold;
-    }
-    .images {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin: 20px auto;
-      height: 250px;
-      overflow-y: auto;
-      width: 46%;
-      gap: 2%;
-      border: 1px solid #ddd;
-      padding: 10px;
-      border-radius: 4.6%;
-      position: relative;
-      box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
-    }
-    .drop-zone {
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      flex-wrap: nowrap;
-      margin: 20px 0px;
-      overflow-x: auto;
-      padding-bottom: 50px;
-    }
-    .drop-box-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 0 5px;
-    }
-    .drop-box {
-      width: 70px;
-      height: 70px;
-      border: 4px dashed #aaa3a3;
-      border-radius: 5px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 36px;
-      position: relative;
-      flex-shrink: 0;
-      user-select: none;
-      cursor: pointer;
-      transition: transform 0.3s, border-color 0.3s;
-    }
-    .drop-box.empty {
-      border-color: #aaa3a3;
-    }
-    .drop-box.filled {
-      border-color: white;
-    }
-    .drop-box.shake {
-      animation: shake 0.5s;
-    }
-    .drop-box img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
-    .drop-box-text {
-      text-align: center;
-      margin-top: 5px;
-      font-size: 12px;
-      font-weight: bold;
-    }
-    .sign {
-      font-size: 76px;
-      margin: 0 5px;
-      color: #FCD307;
-      user-select: none;
-      flex-shrink: 0;
-    }
-    .result-box {
-      border: 2px solid #FCD307;
-      background-color: #FFF8DC;
-      border-radius: 5px;
-      margin-left: 15px;
-      flex-shrink: 0;
-      width: 80px;
-      height: 80px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .result-box img {
-      max-width: 60px;
-      max-height: 60px;
-      object-fit: contain;
-    }
-    .hint-button {
-      margin: 20px auto;
-      padding: 10px 20px;
-      background-color: #FCD307;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    .hint-text {
-      margin: 20px auto;
-      font-size: 18px;
-      color: #333;
-      min-height: 24px;
-    }
-    .hint-image-container {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin: 20px auto;
-      padding: 10px;
-    }
-    .hint-image img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    .continue-button {
-      margin: 20px auto;
-      padding: 10px 20px;
-      background-color: #FCD307;
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
-      display: none;
-    }
-    .countdown {
-      margin: 10px auto;
-      font-size: 18px;
-      color: #333;
-    }
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-5px); }
-      40%, 80% { transform: translateX(5px); }
-    }
-    @media (max-width: 768px) {
-      .game-container {
-        width: 100%;
-        padding: 10px;
-      }
-      .images {
-        width: 100%;
-      }
-    }
-    p {
-      font-size: 25px;
-      color: rgb(80, 77, 77);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Choice Game</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #E2E2E2;
+            color: #000000;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            gap: 4px;
+            width: 100%;
+            height: 12px;
+            margin-bottom: 20px;
+            background-color: transparent;
+        }
+
+        .progress-segment {
+            flex: 1;
+            background-color: #ddd;
+            transition: background-color 0.3s ease;
+            height: 100%;
+        }
+
+        .progress-segment:first-child {
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 6px;
+        }
+
+        .progress-segment:last-child {
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
+        }
+
+        .progress-segment.filled {
+            background: linear-gradient(to right, #FCD307, #FFBC00);
+        }
+
+        .progress-segment.flashing {
+            animation: flash 1s infinite;
+        }
+
+        @keyframes flash {
+            0%, 100% {
+                background-color: #ddd;
+            }
+            50% {
+                background-color: rgba(252, 211, 7, 0.7);
+            }
+        }
+
+        .title-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .title-container h1 {
+            color: #000000;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .title-container h2 {
+            color: #555555;
+            font-size: 24px;
+        }
+
+        .game-container {
+            background-color: #FFFFFF;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 90%;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .image-container img {
+            max-width: 70%;
+            height: auto;
+            border-radius: 30px;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .option-button {
+            background-color: #FCD307;
+            border: none;
+            border-radius: 50px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            width: 80%;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .option-button:hover {
+            background-color: #FFBC00;
+            transform: scale(1.02);
+        }
+
+        .option-button.selected {
+            background-color: #FFBC00;
+        }
+
+        .option-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #FFFFFF;
+            border: 3px solid #000000;
+            margin-right: 10px;
+        }
+
+        .option-button.selected .option-circle {
+            background-color: #3a3a3a;
+            border: 3px solid #000000;
+        }
+
+        button {
+            background-color: #FCD307;
+            color: #000000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 10px 20px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+            font-size: 18px;
+        }
+
+        button:hover {
+            background-color: #FFBC00;
+        }
+
+        #feedback {
+            font-weight: bold;
+            margin-top: 20px;
+            font-size: 16px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .correct-feedback {
+            color: #2E7D32;
+            background-color: rgba(46, 125, 50, 0.1);
+        }
+
+        .incorrect-feedback {
+            color: #C62828;
+            background-color: rgba(198, 40, 40, 0.1);
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .correct-pill {
+            background-color: rgba(46, 125, 50, 0.1);
+            color: #2E7D32;
+        }
+
+        .try-again-pill {
+            background-color: #FFCDD2;
+            color: #C62828;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 10px 20px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+            font-size: 18px;
+        }
+
+        .try-again-pill:hover {
+            background-color: #FF1744;
+        }
+
+        .continue-pill {
+            background-color: #FFD54F;
+            color: #000000;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 10px 20px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+            font-size: 18px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        @media (min-width: 768px) {
+            .game-container {
+                max-width: 600px;
+                padding: 30px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="outer-container">
     <div class="game-container">
-      <br>
-      <br>
-      <br>
-      <br>
-      <h2>What you can expect from our Spark Team.</h2>
-      <p>Click and drag the right traits of out innovators:</p>
-
-      <div class="drop-zone" id="drop-zone"></div>
-      <div class="images" id="images"></div>
-      <button class="hint-button" onclick="showHint()">Hint</button>
-      <div class="hint-text" id="hint-text"></div>
-      <div id="hint-image-container" class="hint-image-container">
-        <p>Try using this image:</p>
-        <div class="hint-image"></div>
-      </div>
-      <button class="continue-button" id="continue-button" onclick="redirect()">Continue</button>
+        <div class="progress-bar" id="progress-bar">
+            <div class="progress-segment filled"></div>
+            <div class="progress-segment filled"></div>
+            <div class="progress-segment filled"></div>
+            <div class="progress-segment filled"></div>
+            <div class="progress-segment flashing"></div>
+            <div class="progress-segment"></div>
+            <div class="progress-segment"></div>
+        </div>
+        <div id="questionContainer" class="question-container">
+            <div class="title-container">
+                <h1 id="gameTitle">What is WeSpark?</h1>
+                <h2 id="gameSubtitle">Please select one option:</h2>
+            </div>
+            <div class="image-container">
+                <img id="questionImage" src="https://static.wixstatic.com/media/a687f1_b9741a95f5924ea9a44320215d2f8fb3~mv2.png" alt="Question image">
+            </div>
+            <div class="options-container" id="optionsForm">
+                <!-- Options will be loaded here dynamically -->
+            </div>
+            <div class="button-container">
+                <button type="button" id="submitButton" onclick="checkAnswers()">Submit Answer</button>
+            </div>
+            <div id="feedback"></div>
+        </div>
     </div>
-  </div>
-  <script>
-    const imageData = [
-      { src: 'https://static.wixstatic.com/media/9c422e_4027fde4403c4df89509abf2263b6466~mv2.png', name: 'Talk & Do Nothing' },
-      { src: 'https://static.wixstatic.com/media/9c422e_188264a058dc481d8ad0f8c23d1695e5~mv2.png', name: 'Extraordinary Presence' },
-      { src: 'https://static.wixstatic.com/media/9c422e_fd16e57d914c4b7597b283fea2fc3504~mv2.png', name: 'Positive Mindset' },
-      { src: 'https://static.wixstatic.com/media/5d9fdb_33e8815debe4482b8e19917f76274b6d~mv2.png', name: 'Confused & lost' },
-      { src: 'https://static.wixstatic.com/media/9c422e_56a882fa6b884fdaa8abbbe260341518~mv2.png', name: 'Super Skilled' },
-      { src: 'https://static.wixstatic.com/media/9c422e_9dc5110bcb5c451b99c8bca11812f42b~mv2.png', name: 'Super Muscles' },
-      { src: 'https://static.wixstatic.com/media/9c422e_6a93b37adb9b48759b5ed4c701fd7ed6~mv2.png', name: 'Scared of Everything' },
-      { src: 'https://static.wixstatic.com/media/9c422e_177c15101cc74545b0fe14af049c8e5f~mv2.png', name: 'Pure theorist' },
-      { src: 'https://static.wixstatic.com/media/9c422e_5febf08c276f46b593d337d9a5cd46be~mv2.png', name: 'Holistic Vision' },
-      { src: 'https://static.wixstatic.com/media/9c422e_1803a5ed092843209a4262f95b060ba9~mv2.png', name: 'Good at Videogames' }
-    ];
+    <canvas id="confetti-canvas" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100vmin; height: 100vmin; pointer-events: none; z-index: 100;"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+        let questions = [
+            {
+                questionText: "What is the capital of France?",
+                questionImage: "https://static.wixstatic.com/media/a687f1_b9741a95f5924ea9a44320215d2f8fb3~mv2.png",
+                options: [
+                    { text: "Number 1", correct: false, errorMessage: "❌ This is not the WeSpark logo!" },
+                    { text: "Number 2", correct: false, errorMessage: "❌ This is not the WeSpark logo!" },
+                    { text: "Number 3", correct: true, errorMessage: "✅ This is the WeSpark logo!" }
+                ]
+            }
+        ];
 
-    let draggedImage = null;
+        let currentQuestionIndex = 0;
+        let selectedOption = null;
+        let confettiInterval;
 
-    function allowDrop(ev) {
-      ev.preventDefault();
-    }
-
-    function drag(ev) {
-      draggedImage = ev.target;
-      ev.dataTransfer.setData("text", ev.target.id);
-    }
-
-    function endDrag(ev) {
-      if (draggedImage) {
-        draggedImage = null;
-      }
-    }
-
-    function drop(ev) {
-      ev.preventDefault();
-      const data = ev.dataTransfer.getData("text");
-      let dropBoxContainer = ev.target;
-      while (!dropBoxContainer.classList.contains('drop-box-container')) {
-        dropBoxContainer = dropBoxContainer.parentNode;
-      }
-      const dropBox = dropBoxContainer.querySelector('.drop-box');
-      if (dropBox.children.length === 0) {
-        const imageContainer = document.getElementById(data);
-        const imageText = imageContainer.querySelector('.image-text').textContent;
-        const imageElement = imageContainer.querySelector('.image');
-
-        if (['Extraordinary Presence', 'Positive Mindset', 'Super Skilled', 'Holistic Vision'].includes(imageText)) {
-          imageElement.classList.add('valid');
-          dropBox.appendChild(imageContainer);
-          setTimeout(() => {
-            imageElement.classList.remove('valid');
-          }, 1000);
-        } else {
-          imageElement.classList.add('invalid');
-          dropBox.appendChild(imageContainer);
-          dropBox.classList.add('shake');
-          setTimeout(() => {
-            dropBox.classList.remove('shake');
-            imageElement.classList.remove('invalid');
-            const imagesContainer = document.getElementById('images');
-            imagesContainer.appendChild(imageContainer);
-            resetDropBox(dropBoxContainer);
-          }, 1000);
+        function updateProgressBar() {
+            const segments = document.querySelectorAll(".progress-segment");
+            segments.forEach((segment, index) => {
+                segment.classList.remove('flashing');
+                if (index < 5) {
+                    segment.classList.add('filled');
+                }
+                if (index === 5) {
+                    segment.classList.add('flashing');
+                }
+            });
         }
-        dropBox.classList.remove('empty');
-        dropBox.classList.add('filled');
-        checkAllCorrect();
-      }
-    }
 
-    function resetDropBox(dropBoxContainer) {
-      const dropBox = dropBoxContainer.querySelector('.drop-box');
-      dropBox.innerHTML = '';
-      dropBox.classList.remove('filled');
-      dropBox.classList.add('empty');
-    }
-
-    function checkAllCorrect() {
-      const dropBoxes = Array.from({ length: 4 }, (_, i) => document.getElementById(`drop-box-${i + 1}`));
-      const validImages = ['Extraordinary Presence', 'Positive Mindset', 'Super Skilled', 'Holistic Vision'];
-
-      const allCorrect = dropBoxes.every(dropBox => {
-        const imageTextElement = dropBox.querySelector('.image-text');
-        return imageTextElement && validImages.includes(imageTextElement.textContent);
-      });
-
-      if (allCorrect) {
-        launchConfetti();
-        setTimeout(showContinueButton, 1500);
-      }
-    }
-
-    function launchConfetti() {
-      confetti({
-        particleCount: 150,
-        spread: 70,
-        origin: { y: 0.6 }
-      });
-    }
-
-    function showContinueButton() {
-      const continueButton = document.getElementById('continue-button');
-      continueButton.style.display = 'block';
-      let countdown = 10;
-      continueButton.textContent = `Continue [${countdown}]`;
-      const countdownInterval = setInterval(() => {
-        countdown--;
-        continueButton.textContent = `Continue [${countdown}]`;
-        if (countdown <= 0) {
-          clearInterval(countdownInterval);
-          redirect();
+        function loadQuestion(index) {
+            const question = questions[index];
+            const questionContainer = document.getElementById('questionContainer');
+            if (question) {
+                document.getElementById('feedback').textContent = '';
+                document.getElementById('feedback').className = '';
+                selectedOption = null;
+                if (question.questionImage) {
+                    document.getElementById('questionImage').src = question.questionImage;
+                    document.getElementById('questionImage').style.display = 'block';
+                } else {
+                    document.getElementById('questionImage').style.display = 'none';
+                }
+                const optionsContainer = document.getElementById('optionsForm');
+                optionsContainer.innerHTML = '';
+                question.options.forEach((option, i) => {
+                    const button = document.createElement('button');
+                    button.className = 'option-button';
+                    button.innerHTML = `
+                        <div class="option-circle"></div>
+                        <span>${option.text}</span>
+                    `;
+                    button.onclick = function() {
+                        selectedOption = option;
+                        document.querySelectorAll('.option-button').forEach(btn => btn.classList.remove('selected'));
+                        button.classList.add('selected');
+                    };
+                    optionsContainer.appendChild(button);
+                });
+                questionContainer.classList.add('enter');
+                setTimeout(() => {
+                    questionContainer.classList.remove('enter');
+                    questionContainer.classList.add('center');
+                }, 10);
+            }
         }
-      }, 1000);
-    }
 
-    function redirect() {
-      window.location.href = 'https://levi5171.wixstudio.com/my-site-1/blank-3'; // Reemplaza con tu URL deseada
-    }
+        function checkAnswers() {
+            const questionContainer = document.getElementById('questionContainer');
+            const feedbackElement = document.getElementById('feedback');
+            const buttonContainer = document.querySelector('.button-container');
+            const submitButton = document.getElementById('submitButton');
 
-    function renderDropZone() {
-      const dropZone = document.getElementById('drop-zone');
-      dropZone.innerHTML = '';
-      for (let i = 0; i < 4; i++) {
-        const dropBoxContainer = document.createElement('div');
-        dropBoxContainer.className = 'drop-box-container';
-        const dropBox = document.createElement('div');
-        dropBox.className = 'drop-box empty';
-        dropBox.id = `drop-box-${i + 1}`;
-        dropBox.ondragover = allowDrop;
-        dropBox.ondrop = drop;
-        dropBoxContainer.appendChild(dropBox);
-        dropZone.appendChild(dropBoxContainer);
-        if (i < 3) {
-          const plusSign = document.createElement('span');
-          plusSign.className = 'sign';
-          plusSign.textContent = '+';
-          dropZone.appendChild(plusSign);
+            if (selectedOption) {
+                if (selectedOption.correct) {
+                    const correctMessage = document.createElement('div');
+                    correctMessage.className = 'pill correct-pill';
+                    correctMessage.textContent = 'Correct!';
+                    feedbackElement.innerHTML = '';
+                    feedbackElement.appendChild(correctMessage);
+
+                    startConfetti();
+
+                    setTimeout(() => {
+                        correctMessage.style.opacity = '0';
+                        setTimeout(() => {
+                            submitButton.style.display = 'none';
+                            const continueButton = document.createElement('button');
+                            continueButton.className = 'continue-pill';
+                            continueButton.textContent = 'Continue?';
+                            continueButton.onclick = function() {
+                                redirectToWorkPage();
+                            };
+                            buttonContainer.appendChild(continueButton);
+
+                            let timeLeft = 10;
+                            const timer = setInterval(() => {
+                                timeLeft--;
+                                continueButton.textContent = `Continue? [${timeLeft}s]`;
+                                if (timeLeft <= 0) {
+                                    clearInterval(timer);
+                                    redirectToWorkPage();
+                                }
+                            }, 1000);
+                        }, 500);
+                    }, 2000);
+                } else {
+                    feedbackElement.innerHTML = `
+                        <div class="incorrect-feedback">${selectedOption.errorMessage}</div>
+                    `;
+                    const tryAgainButton = document.createElement('button');
+                    tryAgainButton.className = 'try-again-pill';
+                    tryAgainButton.textContent = 'Try Again!';
+                    tryAgainButton.onclick = function() {
+                        resetSelection();
+                        buttonContainer.removeChild(tryAgainButton);
+                    };
+                    buttonContainer.appendChild(tryAgainButton);
+                    questionContainer.classList.add('incorrect-animation');
+                    setTimeout(() => {
+                        questionContainer.classList.remove('incorrect-animation');
+                    }, 500);
+                }
+            } else {
+                feedbackElement.textContent = 'Please select an option.';
+                feedbackElement.className = 'incorrect-feedback';
+            }
         }
-      }
-      const equalSign = document.createElement('span');
-      equalSign.className = 'sign';
-      equalSign.textContent = '=';
-      dropZone.appendChild(equalSign);
-      const resultBox = document.createElement('div');
-      resultBox.className = 'drop-box result-box';
-      resultBox.id = 'result-box';
-      resultBox.innerHTML = `<img src="https://static.wixstatic.com/media/9c422e_1738f6701c4c414dbddba37729e29e07~mv2.png" alt="Result Image">`;
-      dropZone.appendChild(resultBox);
-    }
 
-    function renderImages() {
-      const imagesContainer = document.getElementById('images');
-      imagesContainer.innerHTML = '';
-      imageData.forEach((data, index) => {
-        const img = document.createElement('img');
-        img.src = data.src;
-        const imageContainer = document.createElement('div');
-        imageContainer.className = 'image-container';
-        imageContainer.id = `image-container-${index}`;
-        imageContainer.draggable = true;
-        imageContainer.addEventListener('dragstart', drag);
-        imageContainer.ondragend = endDrag;
-        const imageDiv = document.createElement('div');
-        imageDiv.className = 'image';
-        imageDiv.appendChild(img);
-        const textDiv = document.createElement('div');
-        textDiv.className = 'image-text';
-        textDiv.textContent = data.name;
-        imageContainer.appendChild(imageDiv);
-        imageContainer.appendChild(textDiv);
-        imageContainer.onclick = () => handleImageClickWithAnimation(imageContainer);
-        imagesContainer.appendChild(imageContainer);
-      });
-    }
-
-    function handleImageClickWithAnimation(imageContainer) {
-      const dropBoxes = Array.from({ length: 4 }, (_, i) => document.getElementById(`drop-box-${i + 1}`));
-      const emptyDropBox = dropBoxes.find(box => box.children.length === 0);
-      if (!emptyDropBox) return;
-
-      const imageRect = imageContainer.getBoundingClientRect();
-      const dropRect = emptyDropBox.getBoundingClientRect();
-      const imageText = imageContainer.querySelector('.image-text').textContent;
-      const imageElement = imageContainer.querySelector('.image');
-
-      const clone = imageContainer.cloneNode(true);
-      clone.style.position = 'fixed';
-      clone.style.left = `${imageRect.left}px`;
-      clone.style.top = `${imageRect.top}px`;
-      clone.style.margin = '0';
-      clone.style.zIndex = 1000;
-      clone.style.transition = 'all 0.5s ease';
-      document.body.appendChild(clone);
-
-      setTimeout(() => {
-        clone.style.left = `${dropRect.left + (dropRect.width - imageRect.width) / 2}px`;
-        clone.style.top = `${dropRect.top + (dropRect.height - imageRect.height) / 2}px`;
-        clone.style.transform = 'scale(1.1)';
-      }, 0);
-
-      clone.addEventListener('transitionend', () => {
-        clone.remove();
-        if (['Extraordinary Presence', 'Positive Mindset', 'Super Skilled', 'Holistic Vision'].includes(imageText)) {
-          imageElement.classList.add('valid');
-          emptyDropBox.appendChild(imageContainer);
-          setTimeout(() => {
-            imageElement.classList.remove('valid');
-          }, 1000);
-        } else {
-          imageElement.classList.add('invalid');
-          emptyDropBox.appendChild(imageContainer);
-          emptyDropBox.classList.add('shake');
-          setTimeout(() => {
-            emptyDropBox.classList.remove('shake');
-            imageElement.classList.remove('invalid');
-            const imagesContainer = document.getElementById('images');
-            imagesContainer.appendChild(imageContainer);
-            resetDropBox(emptyDropBox.parentNode);
-          }, 1000);
+        function resetSelection() {
+            document.getElementById('feedback').textContent = '';
+            document.querySelectorAll('.option-button').forEach(btn => btn.classList.remove('selected'));
+            selectedOption = null;
         }
-        emptyDropBox.classList.remove('empty');
-        emptyDropBox.classList.add('filled');
-        imageContainer.style.position = 'relative';
-        imageContainer.style.top = '7px';
-        checkAllCorrect();
-      }, { once: true });
-    }
 
-    function handleDropBoxImageClick(imageContainer) {
-      const imagesContainer = document.getElementById('images');
-      const imageRect = imageContainer.getBoundingClientRect();
-      const containerRect = imagesContainer.getBoundingClientRect();
+        function redirectToWorkPage() {
+            window.location.href = 'https://levi5171.wixstudio.com/my-site-1/blank-3';
+        }
 
-      const clone = imageContainer.cloneNode(true);
-      clone.style.position = 'fixed';
-      clone.style.left = `${imageRect.left}px`;
-      clone.style.top = `${imageRect.top}px`;
-      clone.style.margin = '0';
-      clone.style.zIndex = 1000;
-      clone.style.transition = 'all 0.5s ease';
-      document.body.appendChild(clone);
+        function startConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const myConfetti = confetti.create(canvas, { resize: true, useWorker: true });
 
-      setTimeout(() => {
-        clone.style.left = `${containerRect.left + (containerRect.width - imageRect.width) / 2}px`;
-        clone.style.top = `${containerRect.top + (containerRect.height - imageRect.height) / 2}px`;
-      }, 0);
+            if (confettiInterval) {
+                clearInterval(confettiInterval);
+            }
 
-      clone.addEventListener('transitionend', () => {
-        clone.remove();
-        imagesContainer.appendChild(imageContainer);
-      }, { once: true });
-    }
+            let count = 0;
+            const maxCount = 3;
+            confettiInterval = setInterval(() => {
+                myConfetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+                count++;
+                if (count >= maxCount) {
+                    clearInterval(confettiInterval);
+                }
+            }, 1000);
 
-    function showHint() {
-      const hintText = document.getElementById('hint-text');
-      const hintImageContainer = document.getElementById('hint-image-container');
-      hintText.textContent = '';
-      hintImageContainer.style.display = 'flex';
-      const hintImage = document.querySelector('.hint-image');
-      hintImage.innerHTML = '<img src="https://static.wixstatic.com/media/a687f1_af173dee2aa9497caa5d7623e469b329~mv2.png" alt="Hint Image">';
-    }
+            updateProgressBar();
+        }
 
-    renderDropZone();
-    renderImages();
-  </script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadQuestion(currentQuestionIndex);
+        });
+    </script>
 </body>
 </html>
