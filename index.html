@@ -136,8 +136,8 @@
     }
 
     .image {
-      width: 10vmin;
-      height: 10vmin;
+      width: 8vmin;
+      height: 8vmin;
       border: 0.5vmin solid #000000;
       border-radius: 1vmin;
       display: flex;
@@ -199,8 +199,8 @@
     }
 
     .drop-box {
-      width: 10vmin;
-      height: 10vmin;
+      width: 8vmin;
+      height: 8vmin;
       border: 0.6vmin dashed #aaa3a3;
       border-radius: 0.7vmin;
       display: flex;
@@ -246,16 +246,16 @@
       border-radius: 0.7vmin;
       margin-left: 1vmin;
       flex-shrink: 0;
-      width: 10vmin;
-      height: 10vmin;
+      width: 8vmin;
+      height: 8vmin;
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
     .result-box img {
-      max-width: 10vmin;
-      max-height: 10vmin;
+      max-width: 8vmin;
+      max-height: 8vmin;
       object-fit: contain;
     }
 
@@ -654,7 +654,7 @@
         }
         emptyDropBox.classList.remove('empty');
         emptyDropBox.classList.add('filled');
-        imageContainer.style.position = 'relative';
+        imageContainer.style.position = 'relative'; 
         imageContainer.style.top = '0.7vmin';
         checkAllCorrect();
       }, { once: true });
