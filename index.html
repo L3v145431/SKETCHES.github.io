@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Innovation by Synthesis with Images</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   <style>
@@ -42,7 +42,6 @@
       max-width: 600px;
       max-height: 600px;
       position: relative;
-      overflow: auto;
     }
 
     .outer-container {
@@ -132,7 +131,7 @@
       cursor: grab;
       user-select: none;
       transition: transform 0.3s ease;
-       height: 14vmin; /* Ajusta esta altura según sea necesario */
+      height: 14vmin;
     }
 
     .image {
@@ -167,7 +166,6 @@
       margin-top: 0.3vmin;
       font-size: 1.4vmin;
       font-weight: bold;
-       flex-grow: 1; /* Permite que el texto ocupe el espacio restante sin afectar la altura */
     }
 
     .images {
@@ -189,6 +187,7 @@
       align-items: center;
       margin: 1vmin 0;
       width: 100%;
+      flex-wrap: wrap;
     }
 
     .drop-box-container {
@@ -328,7 +327,6 @@
       gap: 1vmin;
     }
 
-    /* Estilos adicionales para el canvas y el botón de cerrar */
     .hint-canvas-container {
       display: none;
       position: fixed;
@@ -366,6 +364,18 @@
       max-width: 100%;
       max-height: 70vh;
     }
+
+    @media (max-width: 768px) {
+      .images {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .images {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
   </style>
 </head>
 <body>
@@ -386,7 +396,6 @@
         <h2>What you can expect from our Spark Team.</h2>
         <p>Click and drag the right traits of our innovators:</p>
         <br>
-
         <div class="drop-zone" id="drop-zone">
           <div class="drop-box-container">
             <div class="drop-box empty" id="drop-box-1" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
@@ -409,12 +418,9 @@
           </div>
         </div>
         <br>
-
         <div class="images" id="images"></div>
         <div class="button-container">
-          
           <button class="button" onclick="showHintCanvas()">Show Hint Image</button>
-         
         </div>
         <div class="hint-text" id="hint-text"></div>
         <div id="hint-image-container" class="hint-image-container">
@@ -425,14 +431,12 @@
       </div>
     </div>
   </div>
-
   <div id="hint-canvas-container" class="hint-canvas-container">
     <div class="hint-canvas">
       <button class="close-button" onclick="hideHintCanvas()">X</button>
       <img src="https://static.wixstatic.com/media/a687f1_af173dee2aa9497caa5d7623e469b329~mv2.png" alt="Hint Image">
     </div>
   </div>
-
   <script>
     const imageData = [
       { src: 'https://static.wixstatic.com/media/9c422e_4027fde4403c4df89509abf2263b6466~mv2.png', name: 'Talk & Do Nothing' },
@@ -476,7 +480,6 @@
         const imageContainer = document.getElementById(data);
         const imageText = imageContainer.querySelector('.image-text').textContent;
         const imageElement = imageContainer.querySelector('.image');
-
         if (['Extraordinary Presence', 'Positive Mindset', 'Super Skilled', 'Holistic Vision'].includes(imageText)) {
           imageElement.classList.add('valid');
           dropBox.appendChild(imageContainer);
@@ -511,12 +514,10 @@
     function checkAllCorrect() {
       const dropBoxes = Array.from({ length: 4 }, (_, i) => document.getElementById(`drop-box-${i + 1}`));
       const validImages = ['Extraordinary Presence', 'Positive Mindset', 'Super Skilled', 'Holistic Vision'];
-
       const allCorrect = dropBoxes.every(dropBox => {
         const imageTextElement = dropBox.querySelector('.image-text');
         return imageTextElement && validImages.includes(imageTextElement.textContent);
       });
-
       if (allCorrect) {
         launchConfetti();
         setTimeout(showContinueButton, 1500);
@@ -529,7 +530,6 @@
         spread: 70,
         origin: { y: 0.6 }
       });
-
       const segments = document.querySelectorAll(".progress-segment");
       segments.forEach((segment, index) => {
         segment.classList.remove('flashing');
@@ -611,12 +611,10 @@
       const dropBoxes = Array.from({ length: 4 }, (_, i) => document.getElementById(`drop-box-${i + 1}`));
       const emptyDropBox = dropBoxes.find(box => box.children.length === 0);
       if (!emptyDropBox) return;
-
       const imageRect = imageContainer.getBoundingClientRect();
       const dropRect = emptyDropBox.getBoundingClientRect();
       const imageText = imageContainer.querySelector('.image-text').textContent;
       const imageElement = imageContainer.querySelector('.image');
-
       const clone = imageContainer.cloneNode(true);
       clone.style.position = 'fixed';
       clone.style.left = `${imageRect.left}px`;
@@ -625,13 +623,11 @@
       clone.style.zIndex = 1000;
       clone.style.transition = 'all 0.5s ease';
       document.body.appendChild(clone);
-
       setTimeout(() => {
         clone.style.left = `${dropRect.left + (dropRect.width - imageRect.width) / 2}px`;
         clone.style.top = `${dropRect.top + (dropRect.height - imageRect.height) / 2}px`;
         clone.style.transform = 'scale(1.1)';
       }, 0);
-
       clone.addEventListener('transitionend', () => {
         clone.remove();
         if (['Extraordinary Presence', 'Positive Mindset', 'Super Skilled', 'Holistic Vision'].includes(imageText)) {
@@ -654,7 +650,7 @@
         }
         emptyDropBox.classList.remove('empty');
         emptyDropBox.classList.add('filled');
-        imageContainer.style.position = 'relative'; 
+        imageContainer.style.position = 'relative';
         imageContainer.style.top = '0.7vmin';
         checkAllCorrect();
       }, { once: true });
