@@ -6,6 +6,7 @@
   <title>Innovation by Synthesis with Images</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   <style>
+    /* Estilos CSS permanecen igual */
     :root {
       --yellow: #FCD307;
       --orange: #FFBC00;
@@ -46,7 +47,7 @@
 
     .outer-container {
       width: 100%;
-      height: 100%;
+      height: 85%;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -164,7 +165,7 @@
     .image-text {
       text-align: center;
       margin-top: 0.3vmin;
-      font-size: 1.4vmin;
+      font-size: 1.7vmin;
       font-weight: bold;
     }
 
@@ -185,8 +186,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 1vmin 0;
-      width: 100%;
+      margin: 2vmin 0;
+      width: 95%;
       flex-wrap: wrap;
     }
 
@@ -350,16 +351,6 @@
       overflow: auto;
     }
 
-    .close-button {
-      position: absolute;
-      top: 0.5vmin;
-      right: 0.5vmin;
-      background: none;
-      border: none;
-      font-size: 2vmin;
-      cursor: pointer;
-    }
-
     .hint-canvas img {
       max-width: 100%;
       max-height: 70vh;
@@ -431,9 +422,8 @@
       </div>
     </div>
   </div>
-  <div id="hint-canvas-container" class="hint-canvas-container">
+  <div id="hint-canvas-container" class="hint-canvas-container" onclick="hideHintCanvas()">
     <div class="hint-canvas">
-      <button class="close-button" onclick="hideHintCanvas()">X</button>
       <img src="https://static.wixstatic.com/media/a687f1_af173dee2aa9497caa5d7623e469b329~mv2.png" alt="Hint Image">
     </div>
   </div>
@@ -651,7 +641,7 @@
         emptyDropBox.classList.remove('empty');
         emptyDropBox.classList.add('filled');
         imageContainer.style.position = 'relative';
-        imageContainer.style.top = '0.7vmin';
+        imageContainer.style.top = '2vmin';
         checkAllCorrect();
       }, { once: true });
     }
