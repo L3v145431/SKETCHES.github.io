@@ -6,8 +6,16 @@
   <title>Innovation by Synthesis with Images</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   <style>
-    /* Estilos CSS permanecen igual */
     :root {
+      --global_title_color: #FFFFFF;
+      --global_background_color: #000000;
+      --global_button_text_color: #000000;
+      --global_button_color_main: #FCD307;
+      --global_button_color_secondary: #FFD700;
+      --global_color_frames: #E2E2E2;
+      --global_color_soft: #F4A460;
+      --global_color_pass: #1bb40d;
+      --global_color_fail: #ff3030;
       --yellow: #FCD307;
       --orange: #FFBC00;
       --black: #000000;
@@ -16,69 +24,61 @@
       --green: #2E7D32;
       --red: #C62828;
     }
-
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-
     body {
-      font-family: Arial, sans-serif;
-      background-color: var(--gray);
-      color: var(--black);
-      padding: 20px;
+      font-family: Helvetica, sans-serif;
+      background-color: var(--global_color_frames);
+      color: var(--global_background_color);
+      padding: 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      height: 100vh;
       line-height: 1.6;
       position: relative;
-      overflow-x: hidden;
+      overflow: hidden;
     }
-
     .game-wrapper {
-      width: 90vmin;
-      height: 90vmin;
-      max-width: 600px;
-      max-height: 600px;
-      position: relative;
+      width: 95vmin;
+      height: 95vmin;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-
     .outer-container {
       width: 100%;
-      height: 85%;
+      height: 95%;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       align-items: center;
-      position: relative;
       padding: 1vmin;
       box-sizing: border-box;
-      overflow: auto;
+      overflow: hidden;
     }
-
     .game-container {
-      background-color: white;
+      background-color: var(--global_title_color);
       border-radius: 2vmin;
       box-shadow: 0 0 2vmin rgba(0, 0, 0, 0.1);
       padding: 1vmin;
       text-align: center;
       width: 100%;
-      height: 100%;
+      height: 95%;
       display: flex;
       flex-direction: column;
       box-sizing: border-box;
       overflow: hidden;
     }
-
     .progress-container {
       display: flex;
       justify-content: center;
       width: 100%;
       margin-bottom: 1vmin;
     }
-
     .progress-bar {
       display: flex;
       justify-content: space-between;
@@ -87,58 +87,57 @@
       height: 1vmin;
       background-color: transparent;
     }
-
     .progress-segment {
       flex: 1;
       background-color: #ddd;
       transition: background-color 0.3s ease;
       height: 100%;
     }
-
     .progress-segment:first-child {
       border-top-left-radius: 0.7vmin;
       border-bottom-left-radius: 0.7vmin;
     }
-
     .progress-segment:last-child {
       border-top-right-radius: 0.7vmin;
       border-bottom-right-radius: 0.7vmin;
     }
-
     .progress-segment.filled {
-      background: linear-gradient(to right, #FCD307, #FFBC00);
+      background: linear-gradient(to right, var(--global_button_color_main), var(--global_button_color_secondary));
     }
-
     .progress-segment.flashing {
       animation: flash 1s infinite;
     }
-
     @keyframes flash {
-      0%, 100% {
-        background-color: #ddd;
-      }
-      50% {
-        background-color: rgba(252, 211, 7, 0.7);
-      }
+      0%, 100% { background-color: #ddd; }
+      50% { background-color: rgba(252, 211, 7, 0.7); }
     }
-
+    .images {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 2vmin auto;
+      width: 80%;
+      gap: 2vmin;
+      border: 0.1vmin solid #ddd;
+      padding: 1vmin;
+      border-radius: 0.7vmin;
+      box-shadow: 0.5vmin 0.5vmin 1vmin rgba(0, 0, 0, 0.2);
+    }
     .image-container {
-      width: 10vmin;
-      margin: 0.2vmin;
-      display: inline-flex;
+      display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       cursor: grab;
       user-select: none;
       transition: transform 0.3s ease;
-      height: 14vmin;
+      padding: 0.2vmin;
     }
-
     .image {
-      width: 8vmin;
-      height: 8vmin;
-      border: 0.5vmin solid #000000;
+      width: 12vmin;
+      height: 12vmin;
+      border: 0.4vmin solid var(--global_background_color);
       border-radius: 1vmin;
       display: flex;
       justify-content: center;
@@ -146,61 +145,41 @@
       overflow: hidden;
       transition: border-color 0.3s;
     }
-
     .image.valid {
-      border-color: green;
+      border-color: var(--global_color_pass);
     }
-
     .image.invalid {
-      border-color: red;
+      border-color: var(--global_color_fail);
     }
-
     .image img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
       pointer-events: none;
     }
-
     .image-text {
       text-align: center;
       margin-top: 0.3vmin;
-      font-size: 1.7vmin;
+      font-size: 1vmin;
       font-weight: bold;
     }
-
-    .images {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      justify-content: center;
-      width: 100%;
-      gap: 0.1vmin;
-      border: 0.1vmin solid #ddd;
-      padding: 0.5vmin;
-      border-radius: 1vmin;
-      box-shadow: 0.5vmin 0.5vmin 1vmin rgba(0, 0, 0, 0.2);
-      margin-bottom: 1vmin;
-    }
-
     .drop-zone {
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 2vmin 0;
-      width: 95%;
+      margin: 1vmin 0;
+      width: 100%;
       flex-wrap: wrap;
     }
-
     .drop-box-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       margin: 0 0.5vmin;
     }
-
     .drop-box {
-      width: 8vmin;
-      height: 8vmin;
+      width: 12vmin;
+      height: 12vmin;
       border: 0.6vmin dashed #aaa3a3;
       border-radius: 0.7vmin;
       display: flex;
@@ -213,69 +192,59 @@
       cursor: pointer;
       transition: transform 0.3s, border-color 0.3s;
     }
-
     .drop-box.empty {
       border-color: #aaa3a3;
     }
-
     .drop-box.filled {
-      border-color: white;
+      border-color: var(--global_title_color);
     }
-
     .drop-box.shake {
       animation: shake 0.5s;
     }
-
     .drop-box img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
     }
-
     .sign {
       font-size: 8vmin;
       margin: 0 0.5vmin;
-      color: #FCD307;
+      color: var(--global_button_color_main);
       user-select: none;
       flex-shrink: 0;
     }
-
     .result-box {
-      border: 0.2vmin solid #FCD307;
+      border: 0.2vmin solid var(--global_button_color_main);
       background-color: #FFF8DC;
       border-radius: 0.7vmin;
       margin-left: 1vmin;
       flex-shrink: 0;
-      width: 8vmin;
-      height: 8vmin;
+      width: 12vmin;
+      height: 12vmin;
       display: flex;
       justify-content: center;
       align-items: center;
     }
-
     .result-box img {
-      max-width: 8vmin;
-      max-height: 8vmin;
+      max-width: 12vmin;
+      max-height: 12vmin;
       object-fit: contain;
     }
-
     .button {
       margin: 1vmin auto;
       padding: 0.5vmin 1vmin;
-      background-color: #FCD307;
+      background-color: var(--global_button_color_main);
       border: none;
       border-radius: 0.7vmin;
       cursor: pointer;
       font-size: 1.5vmin;
     }
-
     .hint-text {
       margin: 1vmin auto;
       font-size: 1.5vmin;
       color: #333;
       min-height: 2vmin;
     }
-
     .hint-image-container {
       display: none;
       flex-direction: column;
@@ -285,20 +254,17 @@
       padding: 0.5vmin;
       width: 100%;
       height: auto;
-      overflow-y: auto;
     }
-
     .hint-image img {
       max-width: 100%;
       height: auto;
       border-radius: 1vmin;
       box-shadow: 0 0.3vmin 0.7vmin rgba(0, 0, 0, 0.2);
     }
-
     .continue-button {
       margin: 1vmin auto;
       padding: 0.5vmin 1vmin;
-      background-color: #FCD307;
+      background-color: var(--global_button_color_main);
       border: none;
       border-radius: 3vmin;
       cursor: pointer;
@@ -306,28 +272,23 @@
       font-weight: bold;
       display: none;
     }
-
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       20%, 60% { transform: translateX(-0.7vmin); }
       40%, 80% { transform: translateX(0.7vmin); }
     }
-
     p {
       font-size: 1.5vmin;
       color: rgb(80, 77, 77);
     }
-
     h2 {
       font-size: 2vmin;
     }
-
     .button-container {
       display: flex;
       justify-content: center;
       gap: 1vmin;
     }
-
     .hint-canvas-container {
       display: none;
       position: fixed;
@@ -340,9 +301,8 @@
       align-items: center;
       z-index: 1000;
     }
-
     .hint-canvas {
-      background-color: white;
+      background-color: var(--global_title_color);
       border-radius: 1vmin;
       padding: 2vmin;
       position: relative;
@@ -350,22 +310,9 @@
       max-height: 80%;
       overflow: auto;
     }
-
     .hint-canvas img {
       max-width: 100%;
       max-height: 70vh;
-    }
-
-    @media (max-width: 768px) {
-      .images {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    @media (max-width: 480px) {
-      .images {
-        grid-template-columns: repeat(2, 1fr);
-      }
     }
   </style>
 </head>
@@ -422,7 +369,7 @@
       </div>
     </div>
   </div>
-  <div id="hint-canvas-container" class="hint-canvas-container" onclick="hideHintCanvas()">
+  <div id="hint-canvas-container" class="hint-canvas-container">
     <div class="hint-canvas">
       <img src="https://static.wixstatic.com/media/a687f1_af173dee2aa9497caa5d7623e469b329~mv2.png" alt="Hint Image">
     </div>
@@ -442,6 +389,11 @@
     ];
 
     let draggedImage = null;
+    let originalContainers = {};
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchElement = null;
+    let touchClone = null;
 
     function allowDrop(ev) {
       ev.preventDefault();
@@ -466,10 +418,90 @@
         dropBoxContainer = dropBoxContainer.parentNode;
       }
       const dropBox = dropBoxContainer.querySelector('.drop-box');
+      processDrop(dropBox, document.getElementById(data));
+    }
+
+    function handleTouchStart(ev) {
+      if (ev.touches.length !== 1) return;
+
+      const touch = ev.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+
+      touchElement = document.elementFromPoint(touch.clientX, touch.clientY);
+      while (touchElement && !touchElement.classList.contains('image-container')) {
+        touchElement = touchElement.parentElement;
+      }
+
+      if (!touchElement) return;
+
+      ev.preventDefault();
+
+      touchClone = touchElement.cloneNode(true);
+      touchClone.style.position = 'fixed';
+      touchClone.style.left = `${touchStartX - touchElement.offsetWidth/2}px`;
+      touchClone.style.top = `${touchStartY - touchElement.offsetHeight/2}px`;
+      touchClone.style.margin = '0';
+      touchClone.style.zIndex = '1000';
+      touchClone.style.transform = 'scale(1.1)';
+      touchClone.style.opacity = '0.8';
+      document.body.appendChild(touchClone);
+    }
+
+    function handleTouchMove(ev) {
+      if (!touchClone || !touchElement) return;
+
+      const touch = ev.touches[0];
+      const touchX = touch.clientX;
+      const touchY = touch.clientY;
+
+      touchClone.style.left = `${touchX - touchElement.offsetWidth/2}px`;
+      touchClone.style.top = `${touchY - touchElement.offsetHeight/2}px`;
+
+      ev.preventDefault();
+    }
+
+    function handleTouchEnd(ev) {
+      if (!touchClone || !touchElement) return;
+
+      const touch = ev.changedTouches[0];
+      const touchX = touch.clientX;
+      const touchY = touch.clientY;
+
+      const dropTarget = document.elementFromPoint(touchX, touchY);
+      let dropBoxContainer = dropTarget;
+      while (dropBoxContainer && !dropBoxContainer.classList.contains('drop-box-container')) {
+        dropBoxContainer = dropBoxContainer.parentElement;
+      }
+
+      if (dropBoxContainer) {
+        const dropBox = dropBoxContainer.querySelector('.drop-box');
+        processDrop(dropBox, touchElement);
+      } else {
+        const dropBoxes = Array.from({ length: 4 }, (_, i) => document.getElementById(`drop-box-${i + 1}`));
+        const emptyDropBox = dropBoxes.find(box => box.children.length === 0);
+        if (emptyDropBox) {
+          processDrop(emptyDropBox, touchElement);
+        } else {
+          const imagesContainer = originalContainers[touchElement.id];
+          if (imagesContainer) {
+            imagesContainer.appendChild(touchElement);
+          }
+        }
+      }
+
+      touchClone.remove();
+      touchClone = null;
+      touchElement = null;
+
+      ev.preventDefault();
+    }
+
+    function processDrop(dropBox, imageContainer) {
       if (dropBox.children.length === 0) {
-        const imageContainer = document.getElementById(data);
         const imageText = imageContainer.querySelector('.image-text').textContent;
         const imageElement = imageContainer.querySelector('.image');
+
         if (['Extraordinary Presence', 'Positive Mindset', 'Super Skilled', 'Holistic Vision'].includes(imageText)) {
           imageElement.classList.add('valid');
           dropBox.appendChild(imageContainer);
@@ -483,9 +515,9 @@
           setTimeout(() => {
             dropBox.classList.remove('shake');
             imageElement.classList.remove('invalid');
-            const imagesContainer = document.getElementById('images');
+            const imagesContainer = originalContainers[imageContainer.id];
             imagesContainer.appendChild(imageContainer);
-            resetDropBox(dropBoxContainer);
+            resetDropBox(dropBox.parentNode);
           }, 1000);
         }
         dropBox.classList.remove('empty');
@@ -508,6 +540,7 @@
         const imageTextElement = dropBox.querySelector('.image-text');
         return imageTextElement && validImages.includes(imageTextElement.textContent);
       });
+
       if (allCorrect) {
         launchConfetti();
         setTimeout(showContinueButton, 1500);
@@ -548,23 +581,19 @@
     }
 
     function redirect() {
-      window.location.href = 'https://l3v145431.github.io/logos.github.io/';
-    }
-
-    function toggleHint() {
-      const hintImageContainer = document.getElementById('hint-image-container');
-      if (hintImageContainer.style.display === 'flex') {
-        hintImageContainer.style.display = 'none';
-      } else {
-        hintImageContainer.style.display = 'flex';
-        const hintImage = document.querySelector('.hint-image');
-        hintImage.innerHTML = '<img src="https://static.wixstatic.com/media/a687f1_af173dee2aa9497caa5d7623e469b329~mv2.png" alt="Hint Image">';
+      if (window.parent && typeof window.parent.loadNextGame === 'function') {
+        window.parent.loadNextGame('https://l3v145431.github.io/logos.github.io/');
       }
     }
 
     function showHintCanvas() {
       const hintCanvasContainer = document.getElementById('hint-canvas-container');
       hintCanvasContainer.style.display = 'flex';
+      hintCanvasContainer.onclick = function(event) {
+        if (event.target === hintCanvasContainer) {
+          hideHintCanvas();
+        }
+      };
     }
 
     function hideHintCanvas() {
@@ -584,6 +613,11 @@
         imageContainer.draggable = true;
         imageContainer.addEventListener('dragstart', drag);
         imageContainer.ondragend = endDrag;
+
+        imageContainer.addEventListener('touchstart', handleTouchStart, { passive: false });
+        imageContainer.addEventListener('touchmove', handleTouchMove, { passive: false });
+        imageContainer.addEventListener('touchend', handleTouchEnd, { passive: false });
+
         const imageDiv = document.createElement('div');
         imageDiv.className = 'image';
         imageDiv.appendChild(img);
@@ -593,7 +627,14 @@
         imageContainer.appendChild(imageDiv);
         imageContainer.appendChild(textDiv);
         imageContainer.onclick = () => handleImageClickWithAnimation(imageContainer);
+        originalContainers[`image-container-${index}`] = imagesContainer;
         imagesContainer.appendChild(imageContainer);
+      });
+
+      const dropBoxes = document.querySelectorAll('.drop-box');
+      dropBoxes.forEach(box => {
+        box.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+        box.addEventListener('touchend', (e) => e.preventDefault(), { passive: false });
       });
     }
 
@@ -610,7 +651,7 @@
       clone.style.left = `${imageRect.left}px`;
       clone.style.top = `${imageRect.top}px`;
       clone.style.margin = '0';
-      clone.style.zIndex = 1000;
+      clone.style.zIndex = '1000';
       clone.style.transition = 'all 0.5s ease';
       document.body.appendChild(clone);
       setTimeout(() => {
@@ -633,7 +674,7 @@
           setTimeout(() => {
             emptyDropBox.classList.remove('shake');
             imageElement.classList.remove('invalid');
-            const imagesContainer = document.getElementById('images');
+            const imagesContainer = originalContainers[imageContainer.id];
             imagesContainer.appendChild(imageContainer);
             resetDropBox(emptyDropBox.parentNode);
           }, 1000);
@@ -641,12 +682,20 @@
         emptyDropBox.classList.remove('empty');
         emptyDropBox.classList.add('filled');
         imageContainer.style.position = 'relative';
-        imageContainer.style.top = '2vmin';
+        imageContainer.style.top = '0.7vmin';
         checkAllCorrect();
       }, { once: true });
     }
 
-    renderImages();
+    document.addEventListener('DOMContentLoaded', () => {
+      renderImages();
+
+      document.addEventListener('touchmove', (e) => {
+        if (touchClone) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+    });
   </script>
 </body>
 </html>
