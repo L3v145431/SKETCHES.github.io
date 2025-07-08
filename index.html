@@ -24,11 +24,13 @@
       --green: #2E7D32;
       --red: #C62828;
     }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
+
     body {
       font-family: Helvetica, sans-serif;
       background-color: var(--global_color_frames);
@@ -42,6 +44,7 @@
       position: relative;
       overflow: hidden;
     }
+
     .game-wrapper {
       width: 95vmin;
       height: 95vmin;
@@ -49,6 +52,7 @@
       justify-content: center;
       align-items: center;
     }
+
     .outer-container {
       width: 100%;
       height: 95%;
@@ -60,6 +64,7 @@
       box-sizing: border-box;
       overflow: hidden;
     }
+
     .game-container {
       background-color: var(--global_title_color);
       border-radius: 2vmin;
@@ -73,12 +78,29 @@
       box-sizing: border-box;
       overflow: hidden;
     }
+    @media (max-width: 768px) {
+  .game-wrapper {
+    width: 100vmin;
+    height: 100vmin;
+  }
+
+  .outer-container {
+    height: 100%;
+  }
+
+  .game-container {
+    height: 100%;
+  }
+}
+
+
     .progress-container {
       display: flex;
       justify-content: center;
       width: 100%;
       margin-bottom: 1vmin;
     }
+
     .progress-bar {
       display: flex;
       justify-content: space-between;
@@ -87,30 +109,41 @@
       height: 1vmin;
       background-color: transparent;
     }
+
     .progress-segment {
       flex: 1;
       background-color: #ddd;
       transition: background-color 0.3s ease;
       height: 100%;
     }
+
     .progress-segment:first-child {
       border-top-left-radius: 0.7vmin;
       border-bottom-left-radius: 0.7vmin;
     }
+
     .progress-segment:last-child {
       border-top-right-radius: 0.7vmin;
       border-bottom-right-radius: 0.7vmin;
     }
+
     .progress-segment.filled {
       background: linear-gradient(to right, var(--global_button_color_main), var(--global_button_color_secondary));
     }
+
     .progress-segment.flashing {
       animation: flash 1s infinite;
     }
+
     @keyframes flash {
-      0%, 100% { background-color: #ddd; }
-      50% { background-color: rgba(252, 211, 7, 0.7); }
+      0%, 100% {
+        background-color: #ddd;
+      }
+      50% {
+        background-color: rgba(252, 211, 7, 0.7);
+      }
     }
+
     .images {
       display: flex;
       flex-direction: row;
@@ -124,6 +157,7 @@
       border-radius: 0.7vmin;
       box-shadow: 0.5vmin 0.5vmin 1vmin rgba(0, 0, 0, 0.2);
     }
+
     .image-container {
       display: flex;
       flex-direction: column;
@@ -134,6 +168,7 @@
       transition: transform 0.3s ease;
       padding: 0.2vmin;
     }
+
     .image {
       width: 12vmin;
       height: 12vmin;
@@ -145,24 +180,29 @@
       overflow: hidden;
       transition: border-color 0.3s;
     }
+
     .image.valid {
       border-color: var(--global_color_pass);
     }
+
     .image.invalid {
       border-color: var(--global_color_fail);
     }
+
     .image img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
       pointer-events: none;
     }
+
     .image-text {
       text-align: center;
       margin-top: 0.3vmin;
       font-size: 1vmin;
       font-weight: bold;
     }
+
     .drop-zone {
       display: flex;
       justify-content: center;
@@ -171,12 +211,14 @@
       width: 100%;
       flex-wrap: wrap;
     }
+
     .drop-box-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       margin: 0 0.5vmin;
     }
+
     .drop-box {
       width: 12vmin;
       height: 12vmin;
@@ -192,20 +234,25 @@
       cursor: pointer;
       transition: transform 0.3s, border-color 0.3s;
     }
+
     .drop-box.empty {
       border-color: #aaa3a3;
     }
+
     .drop-box.filled {
       border-color: var(--global_title_color);
     }
+
     .drop-box.shake {
       animation: shake 0.5s;
     }
+
     .drop-box img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
     }
+
     .sign {
       font-size: 8vmin;
       margin: 0 0.5vmin;
@@ -213,6 +260,7 @@
       user-select: none;
       flex-shrink: 0;
     }
+
     .result-box {
       border: 0.2vmin solid var(--global_button_color_main);
       background-color: #FFF8DC;
@@ -225,11 +273,13 @@
       justify-content: center;
       align-items: center;
     }
+
     .result-box img {
       max-width: 12vmin;
       max-height: 12vmin;
       object-fit: contain;
     }
+
     .button {
       margin: 1vmin auto;
       padding: 0.5vmin 1vmin;
@@ -239,12 +289,14 @@
       cursor: pointer;
       font-size: 1.5vmin;
     }
+
     .hint-text {
       margin: 1vmin auto;
       font-size: 1.5vmin;
       color: #333;
       min-height: 2vmin;
     }
+
     .hint-image-container {
       display: none;
       flex-direction: column;
@@ -255,12 +307,14 @@
       width: 100%;
       height: auto;
     }
+
     .hint-image img {
       max-width: 100%;
       height: auto;
       border-radius: 1vmin;
       box-shadow: 0 0.3vmin 0.7vmin rgba(0, 0, 0, 0.2);
     }
+
     .continue-button {
       margin: 1vmin auto;
       padding: 0.5vmin 1vmin;
@@ -272,23 +326,28 @@
       font-weight: bold;
       display: none;
     }
+
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       20%, 60% { transform: translateX(-0.7vmin); }
       40%, 80% { transform: translateX(0.7vmin); }
     }
+
     p {
       font-size: 1.5vmin;
       color: rgb(80, 77, 77);
     }
+
     h2 {
       font-size: 2vmin;
     }
+
     .button-container {
       display: flex;
       justify-content: center;
       gap: 1vmin;
     }
+
     .hint-canvas-container {
       display: none;
       position: fixed;
@@ -301,6 +360,7 @@
       align-items: center;
       z-index: 1000;
     }
+
     .hint-canvas {
       background-color: var(--global_title_color);
       border-radius: 1vmin;
@@ -310,6 +370,7 @@
       max-height: 80%;
       overflow: auto;
     }
+
     .hint-canvas img {
       max-width: 100%;
       max-height: 70vh;
@@ -423,26 +484,29 @@
 
     function handleTouchStart(ev) {
       if (ev.touches.length !== 1) return;
-
+      
       const touch = ev.touches[0];
       touchStartX = touch.clientX;
       touchStartY = touch.clientY;
-
+      
+      // Find the image container being touched
       touchElement = document.elementFromPoint(touch.clientX, touch.clientY);
       while (touchElement && !touchElement.classList.contains('image-container')) {
         touchElement = touchElement.parentElement;
       }
-
+      
       if (!touchElement) return;
-
+      
       ev.preventDefault();
-
+      
+      // Create a clone for visual feedback
       touchClone = touchElement.cloneNode(true);
       touchClone.style.position = 'fixed';
       touchClone.style.left = `${touchStartX - touchElement.offsetWidth/2}px`;
       touchClone.style.top = `${touchStartY - touchElement.offsetHeight/2}px`;
       touchClone.style.margin = '0';
       touchClone.style.zIndex = '1000';
+      touchClone.style.pointerEvents = 'none';
       touchClone.style.transform = 'scale(1.1)';
       touchClone.style.opacity = '0.8';
       document.body.appendChild(touchClone);
@@ -450,50 +514,55 @@
 
     function handleTouchMove(ev) {
       if (!touchClone || !touchElement) return;
-
+      
       const touch = ev.touches[0];
       const touchX = touch.clientX;
       const touchY = touch.clientY;
-
+      
+      // Move the clone with the touch
       touchClone.style.left = `${touchX - touchElement.offsetWidth/2}px`;
       touchClone.style.top = `${touchY - touchElement.offsetHeight/2}px`;
-
+      
       ev.preventDefault();
     }
 
     function handleTouchEnd(ev) {
       if (!touchClone || !touchElement) return;
-
+      
       const touch = ev.changedTouches[0];
       const touchX = touch.clientX;
       const touchY = touch.clientY;
-
+      
+      // Find the drop target
       const dropTarget = document.elementFromPoint(touchX, touchY);
       let dropBoxContainer = dropTarget;
       while (dropBoxContainer && !dropBoxContainer.classList.contains('drop-box-container')) {
         dropBoxContainer = dropBoxContainer.parentElement;
       }
-
+      
       if (dropBoxContainer) {
         const dropBox = dropBoxContainer.querySelector('.drop-box');
         processDrop(dropBox, touchElement);
       } else {
+        // Si no se soltó en un área válida, colocar en el primer drop-box vacío
         const dropBoxes = Array.from({ length: 4 }, (_, i) => document.getElementById(`drop-box-${i + 1}`));
         const emptyDropBox = dropBoxes.find(box => box.children.length === 0);
         if (emptyDropBox) {
           processDrop(emptyDropBox, touchElement);
         } else {
+          // Si no hay espacios vacíos, devolver a la posición original
           const imagesContainer = originalContainers[touchElement.id];
           if (imagesContainer) {
             imagesContainer.appendChild(touchElement);
           }
         }
       }
-
+      
+      // Clean up
       touchClone.remove();
       touchClone = null;
       touchElement = null;
-
+      
       ev.preventDefault();
     }
 
@@ -501,7 +570,7 @@
       if (dropBox.children.length === 0) {
         const imageText = imageContainer.querySelector('.image-text').textContent;
         const imageElement = imageContainer.querySelector('.image');
-
+        
         if (['Extraordinary Presence', 'Positive Mindset', 'Super Skilled', 'Holistic Vision'].includes(imageText)) {
           imageElement.classList.add('valid');
           dropBox.appendChild(imageContainer);
@@ -540,7 +609,6 @@
         const imageTextElement = dropBox.querySelector('.image-text');
         return imageTextElement && validImages.includes(imageTextElement.textContent);
       });
-
       if (allCorrect) {
         launchConfetti();
         setTimeout(showContinueButton, 1500);
@@ -581,9 +649,7 @@
     }
 
     function redirect() {
-      if (window.parent && typeof window.parent.loadNextGame === 'function') {
-        window.parent.loadNextGame('https://l3v145431.github.io/logos.github.io/');
-      }
+      window.location.href = 'https://l3v145431.github.io/logos.github.io/';
     }
 
     function showHintCanvas() {
@@ -613,11 +679,12 @@
         imageContainer.draggable = true;
         imageContainer.addEventListener('dragstart', drag);
         imageContainer.ondragend = endDrag;
-
+        
+        // Add touch event listeners
         imageContainer.addEventListener('touchstart', handleTouchStart, { passive: false });
         imageContainer.addEventListener('touchmove', handleTouchMove, { passive: false });
         imageContainer.addEventListener('touchend', handleTouchEnd, { passive: false });
-
+        
         const imageDiv = document.createElement('div');
         imageDiv.className = 'image';
         imageDiv.appendChild(img);
@@ -630,7 +697,8 @@
         originalContainers[`image-container-${index}`] = imagesContainer;
         imagesContainer.appendChild(imageContainer);
       });
-
+      
+      // Add touch events to drop zones
       const dropBoxes = document.querySelectorAll('.drop-box');
       dropBoxes.forEach(box => {
         box.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
@@ -687,9 +755,11 @@
       }, { once: true });
     }
 
+    // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       renderImages();
-
+      
+      // Add touch event listeners to document for better handling
       document.addEventListener('touchmove', (e) => {
         if (touchClone) {
           e.preventDefault();
