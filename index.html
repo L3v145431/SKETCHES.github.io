@@ -604,10 +604,10 @@
       const continueButton = document.getElementById('continue-button');
       continueButton.style.display = 'block';
       let countdown = 10;
-      continueButton.textContent = `Continue [${countdown}]`;
+      continueButton.textContent = `Continue (${countdown})`;
       const countdownInterval = setInterval(() => {
         countdown--;
-        continueButton.textContent = `Continue [${countdown}]`;
+        continueButton.textContent = `Continue (${countdown})`;
         if (countdown <= 0) {
           clearInterval(countdownInterval);
           redirect();
