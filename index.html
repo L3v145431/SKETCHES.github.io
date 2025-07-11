@@ -419,33 +419,41 @@
       <img src="https://static.wixstatic.com/media/a687f1_af173dee2aa9497caa5d7623e469b329~mv2.png" alt="Hint Image">
     </div>
   </div>
-  <script>
+ <script>
     const imageData = [
-      { src: 'https://static.wixstatic.com/media/9c422e_4027fde4403c4df89509abf2263b6466~mv2.png', name: 'Talk & Do Nothing' },
+      { src: 'https://static.wixstatic.com/media/9c422e_4027fde4403c4df89509abf2263b6466~mv2.png', name: 'Collaborative' },
       { src: 'https://static.wixstatic.com/media/9c422e_188264a058dc481d8ad0f8c23d1695e5~mv2.png', name: 'Extraordinary Presence' },
       { src: 'https://static.wixstatic.com/media/9c422e_fd16e57d914c4b7597b283fea2fc3504~mv2.png', name: 'Positive Mindset' },
-      { src: 'https://static.wixstatic.com/media/5d9fdb_33e8815debe4482b8e19917f76274b6d~mv2.png', name: 'Confused & lost' },
+      { src: 'https://static.wixstatic.com/media/5d9fdb_33e8815debe4482b8e19917f76274b6d~mv2.png', name: 'Adaptable' },
       { src: 'https://static.wixstatic.com/media/9c422e_56a882fa6b884fdaa8abbbe260341518~mv2.png', name: 'Super Skilled' },
-      { src: 'https://static.wixstatic.com/media/9c422e_9dc5110bcb5c451b99c8bca11812f42b~mv2.png', name: 'Super Muscles' },
-      { src: 'https://static.wixstatic.com/media/9c422e_6a93b37adb9b48759b5ed4c701fd7ed6~mv2.png', name: 'Scared of Everything' },
-      { src: 'https://static.wixstatic.com/media/9c422e_177c15101cc74545b0fe14af049c8e5f~mv2.png', name: 'Pure theorist' },
+      { src: 'https://static.wixstatic.com/media/9c422e_9dc5110bcb5c451b99c8bca11812f42b~mv2.png', name: 'Creative' },
+      { src: 'https://static.wixstatic.com/media/9c422e_6a93b37adb9b48759b5ed4c701fd7ed6~mv2.png', name: 'Resilient' },
+      { src: 'https://static.wixstatic.com/media/9c422e_177c15101cc74545b0fe14af049c8e5f~mv2.png', name: 'Analytical' },
       { src: 'https://static.wixstatic.com/media/9c422e_5febf08c276f46b593d337d9a5cd46be~mv2.png', name: 'Holistic Vision' },
-      { src: 'https://static.wixstatic.com/media/9c422e_1803a5ed092843209a4262f95b060ba9~mv2.png', name: 'Good at Videogames' }
+      { src: 'https://static.wixstatic.com/media/9c422e_1803a5ed092843209a4262f95b060ba9~mv2.png', name: 'Innovative' }
     ];
+
     let draggedImage = null;
     let originalContainers = {};
+    let isAnimating = false;
 
     function allowDrop(ev) {
       ev.preventDefault();
     }
 
     function drag(ev) {
+      if (isAnimating) {
+        ev.preventDefault();
+        return;
+      }
       draggedImage = ev.target;
       ev.dataTransfer.setData("text", ev.target.id);
+      ev.target.classList.add('dragging');
     }
 
     function endDrag(ev) {
       if (draggedImage) {
+        draggedImage.classList.remove('dragging');
         draggedImage = null;
       }
     }
@@ -462,33 +470,41 @@
     }
 
     function processDrop(dropBox, imageContainer) {
-      if (dropBox.children.length === 0) {
-        const imageText = imageContainer.querySelector('.image-text').textContent;
-        const imageElement = imageContainer.querySelector('.image');
-        if (['Extraordinary Presence', 'Positive Mindset', 'Super Skilled', 'Holistic Vision'].includes(imageText)) {
-          imageElement.classList.add('valid');
-          dropBox.appendChild(imageContainer);
-          setTimeout(() => {
-            imageElement.classList.remove('valid');
-          }, 1000);
-        } else {
-          imageElement.classList.add('invalid');
-          dropBox.appendChild(imageContainer);
-          dropBox.classList.add('shake');
-        }
-        imageContainer.onclick = null; // Desactivar el evento de clic
-        dropBox.classList.remove('empty');
-        dropBox.classList.add('filled');
-        setTimeout(() => {
-          dropBox.classList.remove('shake');
-          imageElement.classList.remove('invalid');
-          const imagesContainer = originalContainers[imageContainer.id];
-          imagesContainer.appendChild(imageContainer);
-          resetDropBox(dropBox.parentNode);
-          imageContainer.onclick = () => handleImageClickWithAnimation(imageContainer); // Reactivar el evento de clic
-        }, 1000);
-        checkAllCorrect();
+      if (isAnimating || dropBox.children.length > 0) {
+        return;
       }
+
+      const imageText = imageContainer.querySelector('.image-text').textContent;
+      const imageElement = imageContainer.querySelector('.image');
+
+      if (['Extraordinary Presence', 'Positive Mindset', 'Super Skilled', 'Holistic Vision'].includes(imageText)) {
+        imageElement.classList.add('valid');
+        dropBox.appendChild(imageContainer);
+        setTimeout(() => {
+          imageElement.classList.remove('valid');
+        }, 1000);
+      } else {
+        imageElement.classList.add('invalid');
+        dropBox.appendChild(imageContainer);
+        dropBox.classList.add('shake');
+      }
+
+      isAnimating = true;
+      imageContainer.onclick = null;
+      dropBox.classList.remove('empty');
+      dropBox.classList.add('filled');
+
+      setTimeout(() => {
+        dropBox.classList.remove('shake');
+        imageElement.classList.remove('invalid');
+        const imagesContainer = originalContainers[imageContainer.id];
+        imagesContainer.appendChild(imageContainer);
+        resetDropBox(dropBox.parentNode);
+        imageContainer.onclick = () => handleImageClickWithAnimation(imageContainer);
+        isAnimating = false;
+      }, 1000);
+
+      checkAllCorrect();
     }
 
     function resetDropBox(dropBoxContainer) {
@@ -505,6 +521,7 @@
         const imageTextElement = dropBox.querySelector('.image-text');
         return imageTextElement && validImages.includes(imageTextElement.textContent);
       });
+
       if (allCorrect) {
         launchConfetti();
         setTimeout(showContinueButton, 1500);
@@ -585,18 +602,18 @@
     }
 
     function handleImageClickWithAnimation(imageContainer) {
+      if (isAnimating) return;
+
       const dropBoxes = Array.from({ length: 4 }, (_, i) => document.getElementById(`drop-box-${i + 1}`));
       const emptyDropBox = dropBoxes.find(box => box.children.length === 0);
       if (!emptyDropBox) return;
-      
-      // Desactivar el evento de clic en el contenedor de la imagen
+
+      isAnimating = true;
       imageContainer.onclick = null;
-      
       const imageRect = imageContainer.getBoundingClientRect();
       const dropRect = emptyDropBox.getBoundingClientRect();
       const imageText = imageContainer.querySelector('.image-text').textContent;
       const imageElement = imageContainer.querySelector('.image');
-      
       const clone = imageContainer.cloneNode(true);
       clone.style.position = 'fixed';
       clone.style.left = `${imageRect.left}px`;
@@ -605,16 +622,15 @@
       clone.style.zIndex = '1000';
       clone.style.transition = 'all 0.5s ease';
       document.body.appendChild(clone);
-      
+
       setTimeout(() => {
         clone.style.left = `${dropRect.left + (dropRect.width - imageRect.width) / 2}px`;
         clone.style.top = `${dropRect.top + (dropRect.height - imageRect.height) / 2}px`;
         clone.style.transform = 'scale(1.1)';
       }, 0);
-      
+
       clone.addEventListener('transitionend', () => {
         clone.remove();
-        
         if (['Extraordinary Presence', 'Positive Mindset', 'Super Skilled', 'Holistic Vision'].includes(imageText)) {
           imageElement.classList.add('valid');
           emptyDropBox.appendChild(imageContainer);
@@ -633,14 +649,12 @@
             resetDropBox(emptyDropBox.parentNode);
           }, 1000);
         }
-        
         emptyDropBox.classList.remove('empty');
         emptyDropBox.classList.add('filled');
         imageContainer.style.position = 'relative';
         imageContainer.style.top = '0.7vmin';
         checkAllCorrect();
-        
-        // Reactivar el evento de clic
+        isAnimating = false;
         imageContainer.onclick = () => handleImageClickWithAnimation(imageContainer);
       }, { once: true });
     }
