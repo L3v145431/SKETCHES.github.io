@@ -24,11 +24,14 @@
       --green: #2E7D32;
       --red: #C62828;
     }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      touch-action: manipulation;
     }
+
     body {
       font-family: Helvetica, sans-serif;
       background-color: var(--global_color_frames);
@@ -42,6 +45,7 @@
       position: relative;
       overflow: hidden;
     }
+
     .game-wrapper {
       width: 95vmin;
       height: 95vmin;
@@ -49,6 +53,7 @@
       justify-content: center;
       align-items: center;
     }
+
     .outer-container {
       width: 100%;
       height: 95%;
@@ -60,6 +65,7 @@
       box-sizing: border-box;
       overflow: hidden;
     }
+
     .game-container {
       background-color: var(--global_title_color);
       border-radius: 2vmin;
@@ -73,6 +79,7 @@
       box-sizing: border-box;
       overflow: hidden;
     }
+
     @media (max-width: 768px) {
       .game-wrapper {
         width: 100vmin;
@@ -85,12 +92,14 @@
         height: 100%;
       }
     }
+
     .progress-container {
       display: flex;
       justify-content: center;
       width: 100%;
       margin-bottom: 1vmin;
     }
+
     .progress-bar {
       display: flex;
       justify-content: space-between;
@@ -99,26 +108,32 @@
       height: 1vmin;
       background-color: transparent;
     }
+
     .progress-segment {
       flex: 1;
       background-color: #ddd;
       transition: background-color 0.3s ease;
       height: 100%;
     }
+
     .progress-segment:first-child {
       border-top-left-radius: 0.7vmin;
       border-bottom-left-radius: 0.7vmin;
     }
+
     .progress-segment:last-child {
       border-top-right-radius: 0.7vmin;
       border-bottom-right-radius: 0.7vmin;
     }
+
     .progress-segment.filled {
       background: linear-gradient(to right, var(--global_button_color_main), var(--global_button_color_secondary));
     }
+
     .progress-segment.flashing {
       animation: flash 1s infinite;
     }
+
     @keyframes flash {
       0%, 100% {
         background-color: #ddd;
@@ -127,6 +142,7 @@
         background-color: rgba(252, 211, 7, 0.7);
       }
     }
+
     .images {
       display: flex;
       flex-direction: row;
@@ -140,6 +156,7 @@
       border-radius: 0.7vmin;
       box-shadow: 0.5vmin 0.5vmin 1vmin rgba(0, 0, 0, 0.2);
     }
+
     .image-container {
       display: flex;
       flex-direction: column;
@@ -150,6 +167,7 @@
       transition: transform 0.3s ease;
       padding: 0.2vmin;
     }
+
     .image {
       width: 9vmin;
       height: 9vmin;
@@ -161,24 +179,29 @@
       overflow: hidden;
       transition: border-color 0.3s;
     }
+
     .image.valid {
       border-color: var(--global_color_pass);
     }
+
     .image.invalid {
       border-color: var(--global_color_fail);
     }
+
     .image img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
       pointer-events: none;
     }
+
     .image-text {
       text-align: center;
       margin-top: 0.3vmin;
       font-size: 1vmin;
       font-weight: bold;
     }
+
     .drop-zone {
       display: flex;
       justify-content: center;
@@ -187,12 +210,14 @@
       width: 100%;
       flex-wrap: wrap;
     }
+
     .drop-box-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       margin: 0 0.5vmin;
     }
+
     .drop-box {
       width: 9vmin;
       height: 9vmin;
@@ -208,20 +233,25 @@
       cursor: pointer;
       transition: transform 0.3s, border-color 0.3s;
     }
+
     .drop-box.empty {
       border-color: #aaa3a3;
     }
+
     .drop-box.filled {
       border-color: var(--global_title_color);
     }
+
     .drop-box.shake {
       animation: shake 0.5s;
     }
+
     .drop-box img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
     }
+
     .sign {
       font-size: 8vmin;
       margin: 0 0.5vmin;
@@ -229,6 +259,7 @@
       user-select: none;
       flex-shrink: 0;
     }
+
     .result-box {
       border: 0.2vmin solid var(--global_button_color_main);
       background-color: #FFF8DC;
@@ -241,11 +272,13 @@
       justify-content: center;
       align-items: center;
     }
+
     .result-box img {
       max-width: 9vmin;
       max-height: 9vmin;
       object-fit: contain;
     }
+
     .button {
       margin: 1vmin;
       padding: 1.07vmin;
@@ -258,12 +291,14 @@
       width: 16.5vmin;
       transition: all 0.3s ease;
     }
+
     .button:hover {
       background: var(--white);
       color: var(--black);
       border: 0.4vmin solid var(--black);
       animation: hoverAnimation 0.3s ease;
     }
+
     @keyframes hoverAnimation {
       from {
         transform: scale(1);
@@ -272,12 +307,14 @@
         transform: scale(1.05);
       }
     }
+
     .hint-text {
       margin: 1vmin auto;
       font-size: 1.5vmin;
       color: #333;
       min-height: 2vmin;
     }
+
     .hint-image-container {
       display: none;
       flex-direction: column;
@@ -288,12 +325,14 @@
       width: 100%;
       height: auto;
     }
+
     .hint-image img {
       max-width: 100%;
       height: auto;
       border-radius: 1vmin;
       box-shadow: 0 0.3vmin 0.7vmin rgba(0, 0, 0, 0.2);
     }
+
     .continue-button {
       margin-top: 1vmin;
       padding: 1vmin 2vmin;
@@ -308,23 +347,28 @@
       width: 17vmin;
       margin: 1vmin auto;
     }
+
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       20%, 60% { transform: translateX(-0.7vmin); }
       40%, 80% { transform: translateX(0.7vmin); }
     }
+
     p {
       font-size: 1.5vmin;
       color: rgb(80, 77, 77);
     }
+
     h2 {
       font-size: 2vmin;
     }
+
     .button-container {
       display: flex;
       justify-content: center;
       gap: 1vmin;
     }
+
     .hint-canvas-container {
       display: none;
       position: fixed;
@@ -337,6 +381,7 @@
       align-items: center;
       z-index: 1000;
     }
+
     .hint-canvas {
       background-color: var(--global_title_color);
       border-radius: 1vmin;
@@ -346,10 +391,12 @@
       max-height: 80%;
       overflow: auto;
     }
+
     .hint-canvas img {
       max-width: 100%;
       max-height: 70vh;
     }
+
     .close-button {
       position: absolute;
       top: 5px;
@@ -419,7 +466,8 @@
       <img src="https://static.wixstatic.com/media/a687f1_af173dee2aa9497caa5d7623e469b329~mv2.png" alt="Hint Image">
     </div>
   </div>
- <script>
+
+  <script>
     const imageData = [
       { src: 'https://static.wixstatic.com/media/9c422e_4027fde4403c4df89509abf2263b6466~mv2.png', name: 'Collaborative' },
       { src: 'https://static.wixstatic.com/media/9c422e_188264a058dc481d8ad0f8c23d1695e5~mv2.png', name: 'Extraordinary Presence' },
@@ -448,12 +496,10 @@
       }
       draggedImage = ev.target;
       ev.dataTransfer.setData("text", ev.target.id);
-      ev.target.classList.add('dragging');
     }
 
     function endDrag(ev) {
       if (draggedImage) {
-        draggedImage.classList.remove('dragging');
         draggedImage = null;
       }
     }
@@ -487,21 +533,22 @@
         imageElement.classList.add('invalid');
         dropBox.appendChild(imageContainer);
         dropBox.classList.add('shake');
+        setTimeout(() => {
+          dropBox.classList.remove('shake');
+          imageElement.classList.remove('invalid');
+          const imagesContainer = originalContainers[imageContainer.id];
+          imagesContainer.appendChild(imageContainer);
+          resetDropBox(dropBox.parentNode);
+        }, 1000);
       }
 
       isAnimating = true;
       imageContainer.onclick = null;
       dropBox.classList.remove('empty');
       dropBox.classList.add('filled');
-
       setTimeout(() => {
-        dropBox.classList.remove('shake');
-        imageElement.classList.remove('invalid');
-        const imagesContainer = originalContainers[imageContainer.id];
-        imagesContainer.appendChild(imageContainer);
-        resetDropBox(dropBox.parentNode);
-        imageContainer.onclick = () => handleImageClickWithAnimation(imageContainer);
         isAnimating = false;
+        imageContainer.onclick = () => handleImageClickWithAnimation(imageContainer);
       }, 1000);
 
       checkAllCorrect();
@@ -605,15 +652,18 @@
       if (isAnimating) return;
 
       const dropBoxes = Array.from({ length: 4 }, (_, i) => document.getElementById(`drop-box-${i + 1}`));
-      const emptyDropBox = dropBoxes.find(box => box.children.length === 0);
+      let emptyDropBox = dropBoxes.find(box => box.children.length === 0);
+
       if (!emptyDropBox) return;
 
       isAnimating = true;
       imageContainer.onclick = null;
+
       const imageRect = imageContainer.getBoundingClientRect();
       const dropRect = emptyDropBox.getBoundingClientRect();
       const imageText = imageContainer.querySelector('.image-text').textContent;
       const imageElement = imageContainer.querySelector('.image');
+
       const clone = imageContainer.cloneNode(true);
       clone.style.position = 'fixed';
       clone.style.left = `${imageRect.left}px`;
@@ -624,13 +674,14 @@
       document.body.appendChild(clone);
 
       setTimeout(() => {
-        clone.style.left = `${dropRect.left + (dropRect.width - imageRect.width) / 2}px`;
-        clone.style.top = `${dropRect.top + (dropRect.height - imageRect.height) / 2}px`;
+        clone.style.left = `${dropRect.left}px`;
+        clone.style.top = `${dropRect.top}px`;
         clone.style.transform = 'scale(1.1)';
       }, 0);
 
       clone.addEventListener('transitionend', () => {
         clone.remove();
+
         if (['Extraordinary Presence', 'Positive Mindset', 'Super Skilled', 'Holistic Vision'].includes(imageText)) {
           imageElement.classList.add('valid');
           emptyDropBox.appendChild(imageContainer);
@@ -649,10 +700,12 @@
             resetDropBox(emptyDropBox.parentNode);
           }, 1000);
         }
+
         emptyDropBox.classList.remove('empty');
         emptyDropBox.classList.add('filled');
         imageContainer.style.position = 'relative';
         imageContainer.style.top = '0.7vmin';
+
         checkAllCorrect();
         isAnimating = false;
         imageContainer.onclick = () => handleImageClickWithAnimation(imageContainer);
